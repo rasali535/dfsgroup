@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: #0B1F3A;
+  --color-primary-foreground: #FFFFFF;
+
+  --color-secondary: #D4A017;
+  --color-secondary-foreground: #FFFFFF;
+
+  --color-muted: #F5F7FA;
+  --color-muted-foreground: #64748b;
+
+  --color-accent: #D4A017;
+  --color-accent-foreground: #FFFFFF;
+
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #1A1A1A;
+
+  --color-card: #FFFFFF;
+  --color-card-foreground: #1A1A1A;
+
+  --color-dfs-navy: #0B1F3A;
+  --color-dfs-gold: #D4A017;
+  --color-dfs-light: #F5F7FA;
+  --color-dfs-dark: #1A1A1A;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 215 68% 14%; /* Navy Blue #0B1F3A */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 43 80% 46%; /* Gold #D4A017 */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 216 33% 97%; /* Light Gray #F5F7FA */
+    --muted-foreground: 215 16% 47%;
+    --accent: 43 80% 46%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 215 68% 14%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
