@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { LayoutDashboard, Package, FileText, FileSignature, LogOut, Settings } from "lucide-react";
 import { AuthGate } from "@/components/AuthGate";
