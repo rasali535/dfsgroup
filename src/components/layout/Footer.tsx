@@ -11,14 +11,14 @@ export function Footer() {
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-3">
               <div className="h-10 w-10 bg-dfs-gold flex items-center justify-center">
-                <span className="text-white font-bold text-xl tracking-tighter">DFS</span>
+                <span className="text-white font-bold text-xl tracking-tighter">TF</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-white leading-none tracking-tight">
-                  GROUP
+                <span className="text-lg font-black text-white leading-none tracking-tight">
+                  TradeFlow
                 </span>
-                <span className="text-[10px] uppercase font-semibold tracking-widest text-dfs-gold mt-0.5">
-                  Logistics
+                <span className="text-[10px] uppercase font-bold tracking-widest text-dfs-gold mt-0.5">
+                  Operating System
                 </span>
               </div>
             </Link>
@@ -53,7 +53,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-dfs-gold shrink-0" />
-                <span>operations@dfsgroup.com</span>
+                <span>operations@tradeflowos.com</span>
               </li>
             </ul>
           </div>
@@ -71,7 +71,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-500">
-          <div>&copy; {new Date().getFullYear()} DFS Group. All rights reserved.</div>
+          <div>&copy; {new Date().getFullYear()} TradeFlow OS. All rights reserved.</div>
           <div className="flex gap-4">
             <Link href="#" className="hover:text-slate-300 transition-colors">Privacy Policy</Link>
             <Link href="#" className="hover:text-slate-300 transition-colors">Terms of Service</Link>

@@ -274,9 +274,9 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { quote: "DFS Group has completely transformed our supply chain reliability. Their cross-border customs clearance speed is unmatched in the region.", author: "Mining Corp Ltd" },
-              { quote: "Compliance used to be our biggest bottleneck. Partnering with DFS brought full visibility and zero delays to our manufacturing imports.", author: "Global Manufacturing" },
-              { quote: "Outstanding delivery performance. When we need secure, fast transportation across Southern Africa, DFS is our only choice.", author: "Regional Retailers" }
+              { quote: "TradeFlow OS has completely transformed our supply chain reliability. Their cross-border customs clearance speed is unmatched in the region.", author: "Mining Corp Ltd" },
+              { quote: "Compliance used to be our biggest bottleneck. Partnering with TradeFlow brought full visibility and zero delays to our manufacturing imports.", author: "Global Manufacturing" },
+              { quote: "Outstanding delivery performance. When we need secure, fast transportation across Southern Africa, TradeFlow is our only choice.", author: "Regional Retailers" }
             ].map((test, i) => (
               <motion.div 
                 key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
@@ -305,7 +305,7 @@ export default function Home() {
                 Request Quote
               </Link>
               <Link href="/contact" className="bg-white text-dfs-navy border-2 border-dfs-navy px-10 py-5 font-bold hover:bg-slate-50 transition-colors text-lg">
-                Contact DFS
+                Contact TradeFlow
               </Link>
             </div>
           </motion.div>

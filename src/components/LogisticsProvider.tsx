@@ -27,7 +27,7 @@ export function LogisticsProvider({ children }: { children: React.ReactNode }) {
 
   // Load from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem("dfs_shipments");
+    const stored = localStorage.getItem("tradeflow_shipments");
     if (stored) {
       try {
         setShipments(JSON.parse(stored));
@@ -36,7 +36,7 @@ export function LogisticsProvider({ children }: { children: React.ReactNode }) {
       }
     } else {
       setShipments(mockShipments);
-      localStorage.setItem("dfs_shipments", JSON.stringify(mockShipments));
+      localStorage.setItem("tradeflow_shipments", JSON.stringify(mockShipments));
     }
     setLoading(false);
   }, []);
@@ -44,7 +44,7 @@ export function LogisticsProvider({ children }: { children: React.ReactNode }) {
   // Helper to save to state and localStorage
   const saveShipments = (updated: Shipment[]) => {
     setShipments(updated);
-    localStorage.setItem("dfs_shipments", JSON.stringify(updated));
+    localStorage.setItem("tradeflow_shipments", JSON.stringify(updated));
   };
 
   const addShipment = (shipment: Shipment) => {

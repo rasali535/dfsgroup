@@ -58,9 +58,9 @@ export default function PortalPage() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {[
-                  { id: "DFS-202606-0001", o: "Gaborone, BW", d: "Johannesburg, ZA", s: "In Transit", eta: "10 Jun 2026", color: "emerald" },
-                  { id: "DFS-202606-0002", o: "Lusaka, ZM", d: "Gaborone, BW", s: "Customs Review", eta: "12 Jun 2026", color: "amber" },
-                  { id: "DFS-202606-0003", o: "Harare, ZW", d: "Pretoria, ZA", s: "Booked", eta: "15 Jun 2026", color: "slate" },
+                  { id: "TF-202606-0001", o: "Gaborone, BW", d: "Johannesburg, ZA", s: "In Transit", eta: "10 Jun 2026", color: "emerald" },
+                  { id: "TF-202606-0002", o: "Lusaka, ZM", d: "Gaborone, BW", s: "Customs Review", eta: "12 Jun 2026", color: "amber" },
+                  { id: "TF-202606-0003", o: "Harare, ZW", d: "Pretoria, ZA", s: "Booked", eta: "15 Jun 2026", color: "slate" },
                 ].map((row, i) => (
                   <tr key={i} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-6 py-4 font-medium text-white">{row.id}</td>
@@ -83,12 +83,12 @@ export default function PortalPage() {
           <h2 className="text-2xl font-bold mb-6">Specialized Enterprise Portals</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { name: "MyDFS+", desc: "Document & Parcel" },
-              { name: "DFS Express Commerce", desc: "E-commerce Integration" },
-              { name: "myDFSi", desc: "Global Forwarding" },
-              { name: "DFS SupplyChain", desc: "Warehouse Management" },
-              { name: "DFS SameDay", desc: "Urgent Courier" },
-              { name: "DFS LifeTrack", desc: "Cold Chain Logistics" }
+              { name: "MyTradeFlow+", desc: "Document & Parcel" },
+              { name: "TradeFlow Express Commerce", desc: "E-commerce Integration" },
+              { name: "myTradeFlowi", desc: "Global Forwarding" },
+              { name: "TradeFlow SupplyChain", desc: "Warehouse Management" },
+              { name: "TradeFlow SameDay", desc: "Urgent Courier" },
+              { name: "TradeFlow LifeTrack", desc: "Cold Chain Logistics" }
             ].map((portal, i) => (
               <div key={i} className="bg-slate-900 border border-white/5 hover:border-indigo-500/50 transition-colors rounded-xl p-4 cursor-pointer group">
                 <h3 className="font-bold text-indigo-400 group-hover:text-indigo-300 mb-1">{portal.name}</h3>

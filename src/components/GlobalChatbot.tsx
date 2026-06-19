@@ -9,7 +9,7 @@ export function GlobalChatbot() {
   const { shipments } = useLogistics();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'ai', content: 'Hi there! I am the DFS Customs Assistant. Need help with tariffs, cross-border compliance, or tracking?' }
+    { role: 'ai', content: 'Hi there! I am the TradeFlow Customs Assistant. Need help with tariffs, cross-border compliance, or tracking?' }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,7 +57,7 @@ export function GlobalChatbot() {
       console.error(err);
       setMessages(prev => [...prev, { 
         role: "ai", 
-        content: "Error: Unable to connect to the DFS advisory network. Please check your connection.\n\nFinal clearance remains subject to customs authority approval." 
+        content: "Error: Unable to connect to the TradeFlow advisory network. Please check your connection.\n\nFinal clearance remains subject to customs authority approval." 
       }]);
     } finally {
       setLoading(false);
@@ -97,7 +97,7 @@ export function GlobalChatbot() {
                   <Bot className="w-5 h-5 text-dfs-gold" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">DFS Support Agent</h3>
+                  <h3 className="font-bold text-sm">TradeFlow Support Agent</h3>
                   <div className="text-[10px] text-dfs-gold font-bold uppercase tracking-widest flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online
                   </div>

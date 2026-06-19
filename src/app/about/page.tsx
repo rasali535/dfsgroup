@@ -17,7 +17,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl relative z-10 text-center">
           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
             <div className="text-dfs-gold font-bold uppercase tracking-widest text-sm mb-6">Company Profile</div>
-            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8">About DFS Group</h1>
+            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8">About TradeFlow OS</h1>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto font-light leading-relaxed">
               Moving cargo across borders with confidence. We are Southern Africa's premier logistics, customs clearing, and freight forwarding partner.
             </p>
@@ -33,7 +33,7 @@ export default function AboutPage() {
               <h2 className="text-dfs-gold font-bold uppercase tracking-widest text-sm mb-4">Who We Are</h2>
               <h3 className="text-4xl font-extrabold text-dfs-navy mb-6">A Legacy of Logistics Excellence</h3>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                DFS Group was founded on a simple principle: cross-border logistics in Southern Africa shouldn't be a bottleneck. It should be a competitive advantage.
+                TradeFlow OS was founded on a simple principle: cross-border logistics in Southern Africa shouldn't be a bottleneck. It should be a competitive advantage.
               </p>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
                 Combining decades of deep regional expertise with a modern, technology-driven operations system, we provide end-to-end supply chain visibility. From customs clearance at busy borders to final-mile delivery, we handle the complexities so our clients can focus on their core business.

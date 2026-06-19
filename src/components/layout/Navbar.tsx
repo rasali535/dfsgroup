@@ -7,14 +7,14 @@ export function Navbar() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-3">
             <div className="h-10 w-10 bg-dfs-navy flex items-center justify-center">
-              <span className="text-white font-bold text-xl tracking-tighter">DFS</span>
+              <span className="text-white font-bold text-xl tracking-tighter">TF</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold text-dfs-navy leading-none tracking-tight">
-                GROUP
+              <span className="text-lg font-black text-dfs-navy leading-none tracking-tight">
+                TradeFlow
               </span>
-              <span className="text-[10px] uppercase font-semibold tracking-widest text-dfs-gold mt-0.5">
-                Logistics
+              <span className="text-[10px] uppercase font-bold tracking-widest text-dfs-gold mt-0.5">
+                Operating System
               </span>
             </div>
           </Link>

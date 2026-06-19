@@ -1,4 +1,4 @@
--- DFS Platform Database Schema (PostgreSQL/Supabase)
+-- TradeFlow OS Database Schema (PostgreSQL/Supabase)
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -35,7 +35,7 @@ CREATE TYPE shipment_status AS ENUM (
 
 CREATE TABLE shipments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    waybill_number VARCHAR(50) UNIQUE NOT NULL, -- DFS-YYYYMM-XXXX
+    waybill_number VARCHAR(50) UNIQUE NOT NULL, -- TF-YYYYMM-XXXX
     customer_id UUID REFERENCES customers(id),
     origin VARCHAR(255) NOT NULL,
     destination VARCHAR(255) NOT NULL,

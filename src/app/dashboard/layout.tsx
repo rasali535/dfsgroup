@@ -40,7 +40,7 @@ export default function DashboardLayout({
               <Settings className="w-4 h-4" /> Settings
             </Link>
             <button 
-              onClick={() => { localStorage.removeItem('dfs_auth_client'); window.location.reload(); }} 
+              onClick={() => { localStorage.removeItem('tradeflow_auth_client'); window.location.reload(); }} 
               className="w-full flex items-center gap-3 px-4 py-2 rounded-sm font-medium text-slate-400 hover:bg-white/5 hover:text-red-400 transition-colors text-sm"
             >
               <LogOut className="w-4 h-4" /> Sign Out

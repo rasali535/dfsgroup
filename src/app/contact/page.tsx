@@ -17,7 +17,7 @@ export default function ContactPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl relative z-10 text-center">
           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
             <div className="text-dfs-gold font-bold uppercase tracking-widest text-sm mb-6">Get In Touch</div>
-            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8">Contact DFS Group</h1>
+            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8">Contact TradeFlow OS</h1>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
               Our regional logistics experts are ready to assist you. Reach out today for quotes, support, or partnership inquiries.
             </p>
@@ -82,7 +82,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-bold text-dfs-navy text-lg mb-1">Physical Address</h3>
                     <p className="text-slate-600 leading-relaxed">
-                      DFS Group Logistics Hub<br/>
+                      TradeFlow OS Logistics Hub<br/>
                       Plot 453, Enterprise Park<br/>
                       Gaborone, Botswana
                     </p>
@@ -109,8 +109,8 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-bold text-dfs-navy text-lg mb-1">Email</h3>
                     <p className="text-slate-600 leading-relaxed">
-                      operations@dfsgroup.com<br/>
-                      quotes@dfsgroup.com
+                      operations@tradeflowos.com<br/>
+                      quotes@tradeflowos.com
                     </p>
                   </div>
                 </div>

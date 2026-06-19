@@ -171,7 +171,7 @@ export default function DashboardDocuments() {
               <div className="absolute -right-4 -bottom-4 opacity-5"><FileText className="w-32 h-32" /></div>
               <h3 className="font-bold text-[#D4A017] text-sm mb-2">AI OCR Active</h3>
               <p className="text-slate-350 text-xs mb-4 leading-relaxed">
-                DFS Shipment Intelligence automatically audits consignee details, VAT registrations, and HS tariff classifications.
+                TradeFlow Shipment Intelligence automatically audits consignee details, VAT registrations, and HS tariff classifications.
               </p>
               <Link href="/assistant" className="inline-block bg-[#D4A017] text-white px-4 py-2 text-xs font-bold hover:bg-yellow-500 transition-colors">
                 Consult Customs Co-pilot

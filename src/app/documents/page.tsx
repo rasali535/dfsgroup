@@ -175,7 +175,7 @@ export default function StandaloneDocumentsPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-[#D4A017] text-xs font-bold uppercase tracking-wider mb-3">
-                <FileCheck className="w-3.5 h-3.5" /> DFS Operations Control Center
+                <FileCheck className="w-3.5 h-3.5" /> TradeFlow Operations Control Center
               </div>
               <h1 className="text-3xl font-black tracking-tight md:text-4xl">Document Advisory Center</h1>
               <p className="text-slate-300 text-sm mt-2 max-w-2xl font-light">

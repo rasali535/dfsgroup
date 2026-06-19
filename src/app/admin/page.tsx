@@ -34,7 +34,7 @@ export default function AdminDashboard() {
     // Determine default location based on status for timeline
     let location = "Route Corridor";
     if (newStatus === 'Booked') location = "Origin Depot";
-    else if (newStatus === 'Received') location = "DFS Hub JHB";
+    else if (newStatus === 'Received') location = "TradeFlow Hub JHB";
     else if (newStatus === 'Customs Review' || newStatus === 'Customs Cleared') location = "Border Customs Post";
     else if (newStatus === 'Border Processing') location = "Chirundu Border";
     else if (newStatus === 'Out For Delivery') location = "Destination Hub";
@@ -49,7 +49,7 @@ export default function AdminDashboard() {
     if (!newCustomer || !newOrigin || !newDest) return;
 
     const timeStr = new Date().toLocaleString("en-US", { hour12: false }).replace(",", "");
-    const generatedWaybill = `DFS-202606-000${shipments.length + 1}`;
+    const generatedWaybill = `TF-202606-000${shipments.length + 1}`;
 
     const newShipment: Shipment = {
       waybill: generatedWaybill,
@@ -111,9 +111,9 @@ export default function AdminDashboard() {
       <div className="w-full md:w-64 bg-[#0B1F3A] text-white md:min-h-screen p-4 md:p-6 shrink-0 z-10 relative flex flex-col border-r border-[#0B1F3A]/20">
         <div className="font-black text-lg mb-6 flex items-center gap-2 tracking-tight">
           <div className="w-8 h-8 bg-[#D4A017] text-white flex items-center justify-center font-bold text-base">
-            O
+            T
           </div>
-          DFS Control Center
+          TradeFlow Control Center
         </div>
 
         {/* Role Switcher */}
@@ -335,7 +335,7 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-[#0B1F3A] text-white flex items-center justify-center rounded"><Truck className="w-5 h-5 text-[#D4A017]"/></div>
                         <div>
-                          <div className="font-bold text-xs text-[#0B1F3A]">Carrier ID: DFS-TRK-402</div>
+                          <div className="font-bold text-xs text-[#0B1F3A]">Carrier ID: TF-TRK-402</div>
                           <div className="text-[10px] text-slate-500 font-semibold mt-0.5">Driver: John Doe • Heavy Haul</div>
                         </div>
                       </div>
@@ -351,7 +351,7 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-[#0B1F3A] text-white flex items-center justify-center rounded"><Truck className="w-5 h-5 text-[#D4A017]"/></div>
                         <div>
-                          <div className="font-bold text-xs text-[#0B1F3A]">Carrier ID: DFS-TRK-088</div>
+                          <div className="font-bold text-xs text-[#0B1F3A]">Carrier ID: TF-TRK-088</div>
                           <div className="text-[10px] text-slate-500 font-semibold mt-0.5">Driver: Sipho M. • Machinery Escort</div>
                         </div>
                       </div>

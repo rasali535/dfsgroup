@@ -9,8 +9,8 @@ import { LogisticsProvider } from "@/components/LogisticsProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DFS Group | Premium Logistics, Customs & Freight Forwarding",
-  description: "Moving Cargo Across Borders With Confidence. DFS Group is the premier digital operations system and regional logistics network across Southern Africa.",
+  title: "TradeFlow OS | Premium Logistics, Customs & Freight Forwarding",
+  description: "Moving Cargo Across Borders With Confidence. TradeFlow OS is the premier digital operations system and regional logistics network across Southern Africa.",
 };
 
 export default function RootLayout({

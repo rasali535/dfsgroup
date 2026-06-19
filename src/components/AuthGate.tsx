@@ -18,7 +18,7 @@ export function AuthGate({ children, allowedRole }: AuthGateProps) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const auth = localStorage.getItem(`dfs_auth_${allowedRole}`);
+    const auth = localStorage.getItem(`tradeflow_auth_${allowedRole}`);
     if (auth === 'true') {
       setIsAuthenticated(true);
     } else {
@@ -34,24 +34,24 @@ export function AuthGate({ children, allowedRole }: AuthGateProps) {
     setTimeout(() => {
       if (allowedRole === 'client') {
         if (email === "client@example.com" && password === "user123") {
-          localStorage.setItem('dfs_auth_client', 'true');
+          localStorage.setItem('tradeflow_auth_client', 'true');
           setIsAuthenticated(true);
         } else {
           setError("Invalid credentials. Try client@example.com / user123");
         }
       } else {
         // Admin Roles
-        if (email === "superadmin@dfsgroup.com" && password === "super123") {
-          localStorage.setItem('dfs_auth_admin', 'true');
-          localStorage.setItem('dfs_admin_role', 'superadmin');
+        if (email === "superadmin@tradeflowos.com" && password === "super123") {
+          localStorage.setItem('tradeflow_auth_admin', 'true');
+          localStorage.setItem('tradeflow_admin_role', 'superadmin');
           setIsAuthenticated(true);
-        } else if (email === "fleet@dfsgroup.com" && password === "fleet123") {
-          localStorage.setItem('dfs_auth_admin', 'true');
-          localStorage.setItem('dfs_admin_role', 'fleet_manager');
+        } else if (email === "fleet@tradeflowos.com" && password === "fleet123") {
+          localStorage.setItem('tradeflow_auth_admin', 'true');
+          localStorage.setItem('tradeflow_admin_role', 'fleet_manager');
           setIsAuthenticated(true);
-        } else if (email === "customs@dfsgroup.com" && password === "customs123") {
-          localStorage.setItem('dfs_auth_admin', 'true');
-          localStorage.setItem('dfs_admin_role', 'customs_agent');
+        } else if (email === "customs@tradeflowos.com" && password === "customs123") {
+          localStorage.setItem('tradeflow_auth_admin', 'true');
+          localStorage.setItem('tradeflow_admin_role', 'customs_agent');
           setIsAuthenticated(true);
         } else {
           setError("Invalid credentials. Please check your admin email and password.");

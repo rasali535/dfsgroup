@@ -40,7 +40,7 @@ const RESPONSE_MAP: Record<string, string> = {
 
   "how long does customs clearance take?": 
     "Customs clearance times vary significantly depending on the border post, transport corridor, and pre-filing status:\n\n" +
-    "• **Pre-Cleared Shipments**: 2 to 4 hours. By submitting documents digitally through DFS-OS before arrival, customs clearance is often pre-approved.\n" +
+    "• **Pre-Cleared Shipments**: 2 to 4 hours. By submitting documents digitally through TradeFlow OS before arrival, customs clearance is often pre-approved.\n" +
     "• **Standard Cross-Border (e.g., Kopfontein / Ramatlabama)**: 4 to 12 hours under normal conditions.\n" +
     "• **High-Traffic Corridors (e.g., Beitbridge / Chirundu)**: 12 to 36 hours. Physical inspections or scan queues can delay clearing.\n\n" +
     "Final clearance remains subject to customs authority approval.",
@@ -51,7 +51,7 @@ const RESPONSE_MAP: Record<string, string> = {
     "2. **Customs Road Transit Bond (Guarantee)**: A financial bond matching the potential duties, held by the carrier or clearing agent to guarantee the goods exit the country.\n" +
     "3. **SAD 500 (Customs Declaration)**: Stamped at both the entry border and exit border to close the transit loop.\n" +
     "4. **Standard Invoices and Consignment Notes**: Proving origin, destination, and ownership.\n\n" +
-    "DFS handles bond management automatically for all contracted transit movements.\n\n" +
+    "TradeFlow handles bond management automatically for all contracted transit movements.\n\n" +
     "Final clearance remains subject to customs authority approval."
 };
 
@@ -60,7 +60,7 @@ export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: "ai", 
-      content: "Welcome to the DFS Customs Co-pilot. I am specialized in SADC trade corridor compliance, customs clearance procedures, and tariff code auditing. Let me know what you are shipping or pick a question below." 
+      content: "Welcome to the TradeFlow Customs Co-pilot. I am specialized in SADC trade corridor compliance, customs clearance procedures, and tariff code auditing. Let me know what you are shipping or pick a question below." 
     }
   ]);
   const [input, setInput] = useState("");
@@ -105,7 +105,7 @@ export default function AssistantPage() {
       console.error(err);
       setMessages(prev => [...prev, { 
         role: "ai", 
-        content: "Error: Unable to connect to the DFS advisory network. Please check your connection.\n\nFinal clearance remains subject to customs authority approval." 
+        content: "Error: Unable to connect to the TradeFlow advisory network. Please check your connection.\n\nFinal clearance remains subject to customs authority approval." 
       }]);
     } finally {
       setLoading(false);
@@ -128,7 +128,7 @@ export default function AssistantPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-[#D4A017] text-xs font-bold uppercase tracking-wider mb-3">
-                <Sparkles className="w-3.5 h-3.5 text-[#D4A017]" /> DFS AI Co-pilot
+                <Sparkles className="w-3.5 h-3.5 text-[#D4A017]" /> TradeFlow AI Co-pilot
               </div>
               <h1 className="text-3xl font-black tracking-tight md:text-4xl">Customs Advisory & Compliance</h1>
               <p className="text-slate-300 text-sm mt-2 max-w-2xl font-light">
@@ -177,7 +177,7 @@ export default function AssistantPage() {
                 <div className="absolute right-0 bottom-0 opacity-5"><Bot className="w-32 h-32" /></div>
                 <h4 className="font-bold text-[#D4A017] text-sm mb-2">Automated Audit</h4>
                 <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                  Upload trade documents and let DFS-OS parse classifications and flag mismatches automatically before arrival.
+                  Upload trade documents and let TradeFlow OS parse classifications and flag mismatches automatically before arrival.
                 </p>
                 <a 
                   href="/documents" 
@@ -198,13 +198,13 @@ export default function AssistantPage() {
                     <Bot className="w-5 h-5 text-[#D4A017]" />
                   </div>
                   <div>
-                    <div className="font-bold text-sm text-[#0B1F3A]">DFS Compliance Advisor</div>
+                    <div className="font-bold text-sm text-[#0B1F3A]">TradeFlow Compliance Advisor</div>
                     <div className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> System Ready
                     </div>
                   </div>
                 </div>
-                <div className="text-xs text-slate-400 font-mono hidden sm:block">DFS-OS AI Agent v1.2</div>
+                <div className="text-xs text-slate-400 font-mono hidden sm:block">TradeFlow OS AI Agent v1.2</div>
               </div>
 
               {/* Chat Messages */}
@@ -277,7 +277,7 @@ export default function AssistantPage() {
                   </button>
                 </div>
                 <div className="text-[10px] text-slate-400 text-center mt-2 font-medium">
-                  DFS customs database updated daily. Always double check compliance criteria.
+                  TradeFlow customs database updated daily. Always double check compliance criteria.
                 </div>
               </form>
 

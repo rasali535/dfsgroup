@@ -45,7 +45,7 @@ export default function DashboardShipments() {
           <div>
             <h1 className="text-3xl font-black text-[#0B1F3A]">Consignments Manager</h1>
             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">
-              DFS Logistics Platform • Active Freight Corridors
+              TradeFlow Logistics Platform • Active Freight Corridors
             </p>
           </div>
           <div className="flex gap-3">

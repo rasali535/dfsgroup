@@ -45,11 +45,11 @@ export default function TrackingPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="text-[#D4A017] text-xs font-bold uppercase tracking-widest mb-4 flex items-center justify-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#D4A017]" /> DFS Shipment Intelligence System
+              <ShieldCheck className="w-4 h-4 text-[#D4A017]" /> TradeFlow Shipment Intelligence System
             </div>
             <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-6">Consignment Tracking</h1>
             <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-light leading-relaxed mb-10">
-              Enter your DFS waybill number to access real-time status updates, customs clearance logs, and live telematics.
+              Enter your TradeFlow waybill number to access real-time status updates, customs clearance logs, and live telematics.
             </p>
 
             <form onSubmit={handleSearch} className="bg-white p-2 rounded-sm shadow-2xl flex flex-col sm:flex-row gap-2 max-w-2xl mx-auto relative z-20 border-4 border-slate-700/25">
@@ -59,7 +59,7 @@ export default function TrackingPage() {
                   type="text" 
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Enter Waybill (e.g. DFS-202606-0001)"
+                  placeholder="Enter Waybill (e.g. TF-202606-0001)"
                   className="w-full bg-transparent border-none focus:ring-0 text-[#0B1F3A] text-base pl-12 pr-4 h-14 outline-none font-bold placeholder:text-slate-400 uppercase"
                 />
               </div>

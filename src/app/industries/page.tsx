@@ -29,7 +29,7 @@ export default function IndustriesPage() {
             <div className="text-dfs-gold font-bold uppercase tracking-widest text-sm mb-6">Specialized Sectors</div>
             <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8">Industries We Serve</h1>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto font-light leading-relaxed">
-              Every industry has unique logistical challenges. DFS Group delivers tailored, sector-specific solutions that drive efficiency and growth.
+              Every industry has unique logistical challenges. TradeFlow OS delivers tailored, sector-specific solutions that drive efficiency and growth.
             </p>
           </motion.div>
         </div>
