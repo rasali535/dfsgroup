@@ -1,8 +1,8 @@
-# DFS Digital Logistics Operating System (DFS-OS)
+# TradeFlow OS – Digital Logistics Operating System
 
-Welcome to the **DFS Digital Logistics Operating System (DFS-OS)**, a premium technology platform built for DFS Group. DFS-OS serves as a digital foundation for customs clearing, freight forwarding, transit corridor monitoring, and regional cross-border compliance throughout the Southern African Development Community (SADC) region.
+Welcome to **TradeFlow OS**, a premium technology platform built for regional logistics operations. TradeFlow OS serves as a digital foundation for customs clearing, freight forwarding, transit corridor monitoring, and regional cross-border compliance throughout the Southern African Development Community (SADC) region.
 
-DFS-OS combines modern web design with live artificial intelligence to demonstrate a state-of-the-art control room for SADC cross-border logistics.
+TradeFlow OS combines modern web design with live artificial intelligence to demonstrate a state-of-the-art control room for SADC cross-border logistics.
 
 ---
 
@@ -23,7 +23,7 @@ DFS-OS combines modern web design with live artificial intelligence to demonstra
 *   **Database-Aware Responses**: Injects the active shipments database state as dynamic context into the LLM prompt. The AI advisor can resolve queries about specific waybills, ETAs, and border discrepancies in real-time.
 *   *Note: All compliance outputs conclude with the mandatory disclaimer: "Final clearance remains subject to customs authority approval."*
 
-### 4. AI Document compliance Audit
+### 4. AI Document Compliance Audit
 *   **OCR Valuation Auditor**: Automated audits for regional trade documents (Commercial Invoices, Packing Lists, Import Permits, Certificates of Origin) at `/api/analyze-doc`.
 *   **Border Processing Simulation**: Automatically flags compliance issues based on filename metadata and waybill status (e.g., highlighting weight discrepancies for heavy industrial cargo at the Chirundu border).
 
@@ -72,13 +72,13 @@ npm run build
 To log in and experience the platform's multi-tenant design, use the following credentials on the login screen:
 
 ### Operations Control Center (Admin)
-*   **Superadmin**: `superadmin@dfsgroup.com` / `super123`
-*   **Fleet Manager**: `fleet@dfsgroup.com` / `fleet123`
-*   **Customs Clearing Agent**: `customs@dfsgroup.com` / `customs123`
+*   **Superadmin**: `superadmin@tradeflowos.com` / `super123`
+*   **Fleet Manager**: `fleet@tradeflowos.com` / `fleet123`
+*   **Customs Clearing Agent**: `customs@tradeflowos.com` / `customs123`
 
 ### Client Portal
 *   **Commercial Customer**: `client@example.com` / `user123`
 
 ---
 
-*DFS Digital Logistics Operating System. Connecting Southern African Trade Corridors.*
+*TradeFlow OS – Digital Logistics Operating System. Connecting Southern African Trade Corridors.*
