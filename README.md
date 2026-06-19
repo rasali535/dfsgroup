@@ -1,48 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DFS Digital Logistics Operating System (DFS-OS)
 
-## Getting Started
+Welcome to the **DFS Digital Logistics Operating System (DFS-OS)**, a premium technology platform built for DFS Group. DFS-OS serves as a digital foundation for customs clearing, freight forwarding, transit corridor monitoring, and regional cross-border compliance throughout the Southern African Development Community (SADC) region.
 
-First, run the development server:
+DFS-OS combines modern web design with live artificial intelligence to demonstrate a state-of-the-art control room for SADC cross-border logistics.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Key Modules & Capabilities
+
+### 1. Operations Control Center (Admin Portal)
+*   **Active Dispatch Desk**: Enables control room operators to create new consignments, assign tracking waybills, and log cargo descriptions.
+*   **Checkpoint & Status Updates**: Operations officers can update shipment positions (e.g., Kopfontein, Beitbridge, Chirundu, Ramatlabama) and advance transit status.
+*   **Dynamic State Propagation**: Built on a unified global context (`LogisticsProvider`) with `localStorage` fallback. Operations modifications instantly synchronize across all dashboards.
+
+### 2. Client Portal & Tracking Center
+*   **Consignment Tracking**: High-fidelity tracking portal featuring timeline milestones, automated checkpoint timestamps, and live route mapping.
+*   **Interactive Maps**: Integrated with React Leaflet and OpenStreetMap for physical location visualizations across regional corridors.
+*   **Consolidated Client Dashboard**: Gives shippers real-time oversight of cargo status, historical invoicing, active quotes, and linked customs documents.
+
+### 3. SADC Customs Co-pilot
+*   **Live Advisory AI**: Both the dedicated Customs Assistant (`/assistant`) and the floating support widget are connected directly to a secure `/api/chat` route powered by Google's `gemini-2.5-flash` model.
+*   **Database-Aware Responses**: Injects the active shipments database state as dynamic context into the LLM prompt. The AI advisor can resolve queries about specific waybills, ETAs, and border discrepancies in real-time.
+*   *Note: All compliance outputs conclude with the mandatory disclaimer: "Final clearance remains subject to customs authority approval."*
+
+### 4. AI Document compliance Audit
+*   **OCR Valuation Auditor**: Automated audits for regional trade documents (Commercial Invoices, Packing Lists, Import Permits, Certificates of Origin) at `/api/analyze-doc`.
+*   **Border Processing Simulation**: Automatically flags compliance issues based on filename metadata and waybill status (e.g., highlighting weight discrepancies for heavy industrial cargo at the Chirundu border).
+
+---
+
+## 🛠 Tech Stack
+
+*   **Framework**: Next.js 16.2 (Turbopack) with App Router
+*   **UI Library**: React 19.2 & Tailwind CSS v4
+*   **Animation**: Framer Motion
+*   **Icons**: Lucide React
+*   **Mapping**: Leaflet & React Leaflet (OpenStreetMap)
+*   **AI Engine**: Google Gemini API (`gemini-2.5-flash`)
+*   **Data Model**: Stamped PostgreSQL/Supabase schema (defined in `database_schema.sql`)
+
+---
+
+## 📦 Getting Started
+
+### 1. Configure Environment Variables
+Create a `.env.local` file in the root directory:
+```env
+GEMINI_API_KEY="your-gemini-api-key-here"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Build for Production
+```bash
+npm run build
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🔐 Credentials & Access Roles
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To log in and experience the platform's multi-tenant design, use the following credentials on the login screen:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## Demo Accounts
-
-The following demo accounts are available for testing:
-
-### Admin Portal
-- **Superadmin:** `superadmin@dfsgroup.com` / `super123`
-- **Fleet Manager:** `fleet@dfsgroup.com` / `fleet123`
-- **Customs Agent:** `customs@dfsgroup.com` / `customs123`
+### Operations Control Center (Admin)
+*   **Superadmin**: `superadmin@dfsgroup.com` / `super123`
+*   **Fleet Manager**: `fleet@dfsgroup.com` / `fleet123`
+*   **Customs Clearing Agent**: `customs@dfsgroup.com` / `customs123`
 
 ### Client Portal
-- **Client:** `client@example.com` / `user123`
+*   **Commercial Customer**: `client@example.com` / `user123`
+
+---
+
+*DFS Digital Logistics Operating System. Connecting Southern African Trade Corridors.*
