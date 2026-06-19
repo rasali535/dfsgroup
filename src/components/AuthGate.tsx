@@ -32,29 +32,50 @@ export function AuthGate({ children, allowedRole }: AuthGateProps) {
     setError("");
 
     setTimeout(() => {
+      const emailLower = email.trim().toLowerCase();
       if (allowedRole === 'client') {
-        if (email === "client@example.com" && password === "user123") {
+        if (emailLower === "client.global@example.com" && password === "client_tf_2026") {
           localStorage.setItem('tradeflow_auth_client', 'true');
+          localStorage.setItem('tradeflow_client_name', 'Global Retail Ltd');
+          localStorage.setItem('tradeflow_client_id', 'CUST-8829');
+          setIsAuthenticated(true);
+        } else if (emailLower === "client.mining@example.com" && password === "mining_tf_2026") {
+          localStorage.setItem('tradeflow_auth_client', 'true');
+          localStorage.setItem('tradeflow_client_name', 'Mining Corp Ltd');
+          localStorage.setItem('tradeflow_client_id', 'CUST-1044');
+          setIsAuthenticated(true);
+        } else if (emailLower === "client.agritech@example.com" && password === "agri_tf_2026") {
+          localStorage.setItem('tradeflow_auth_client', 'true');
+          localStorage.setItem('tradeflow_client_name', 'AgriTech Solutions');
+          localStorage.setItem('tradeflow_client_id', 'CUST-5591');
           setIsAuthenticated(true);
         } else {
-          setError("Invalid credentials. Try client@example.com / user123");
+          setError("Invalid credentials. Please use an authorized client email and password.");
         }
       } else {
         // Admin Roles
-        if (email === "superadmin@tradeflowos.com" && password === "super123") {
+        if (emailLower === "admin@tradeflowos.com" && password === "admin_tf_2026") {
           localStorage.setItem('tradeflow_auth_admin', 'true');
           localStorage.setItem('tradeflow_admin_role', 'superadmin');
           setIsAuthenticated(true);
-        } else if (email === "fleet@tradeflowos.com" && password === "fleet123") {
+        } else if (emailLower === "fleet.manager@tradeflowos.com" && password === "fleet_tf_2026") {
           localStorage.setItem('tradeflow_auth_admin', 'true');
           localStorage.setItem('tradeflow_admin_role', 'fleet_manager');
           setIsAuthenticated(true);
-        } else if (email === "customs@tradeflowos.com" && password === "customs123") {
+        } else if (emailLower === "customs.agent@tradeflowos.com" && password === "customs_tf_2026") {
           localStorage.setItem('tradeflow_auth_admin', 'true');
           localStorage.setItem('tradeflow_admin_role', 'customs_agent');
           setIsAuthenticated(true);
+        } else if (emailLower === "manager@tradeflowos.com" && password === "manager_tf_2026") {
+          localStorage.setItem('tradeflow_auth_admin', 'true');
+          localStorage.setItem('tradeflow_admin_role', 'operations_manager');
+          setIsAuthenticated(true);
+        } else if (emailLower === "compliance@tradeflowos.com" && password === "compliance_tf_2026") {
+          localStorage.setItem('tradeflow_auth_admin', 'true');
+          localStorage.setItem('tradeflow_admin_role', 'compliance_officer');
+          setIsAuthenticated(true);
         } else {
-          setError("Invalid credentials. Please check your admin email and password.");
+          setError("Invalid credentials. Please use an authorized staff email and password.");
         }
       }
       setLoading(false);
@@ -101,7 +122,7 @@ export function AuthGate({ children, allowedRole }: AuthGateProps) {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={allowedRole === 'admin' ? "admin@dfsgroup.com" : "client@company.com"} 
+              placeholder={allowedRole === 'admin' ? "admin@tradeflowos.com" : "client.global@example.com"} 
               className="w-full bg-slate-50 border border-gray-200 p-3 text-dfs-navy focus:border-dfs-navy outline-none" 
             />
           </div>
@@ -119,13 +140,20 @@ export function AuthGate({ children, allowedRole }: AuthGateProps) {
               />
             </div>
             {allowedRole === 'client' ? (
-              <p className="text-xs text-slate-400 text-right">Credentials: <strong>client@example.com / user123</strong></p>
+              <div className="text-[10px] text-slate-450 mt-2 space-y-1 font-medium bg-slate-50 p-2.5 border border-gray-150 rounded">
+                <p className="font-bold uppercase tracking-wider text-slate-550 mb-1">Simulated Accounts:</p>
+                <p>Global Retail: <strong>client.global@example.com</strong> / <strong>client_tf_2026</strong></p>
+                <p>Mining Corp: <strong>client.mining@example.com</strong> / <strong>mining_tf_2026</strong></p>
+                <p>AgriTech: <strong>client.agritech@example.com</strong> / <strong>agri_tf_2026</strong></p>
+              </div>
             ) : (
-              <div className="text-xs text-slate-400 mt-2 space-y-1 font-medium">
-                <p>Authorized Accounts:</p>
-                <p>superadmin@dfsgroup.com / super123</p>
-                <p>fleet@dfsgroup.com / fleet123</p>
-                <p>customs@dfsgroup.com / customs123</p>
+              <div className="text-[10px] text-slate-450 mt-2 space-y-1 font-medium bg-slate-50 p-2.5 border border-gray-150 rounded">
+                <p className="font-bold uppercase tracking-wider text-slate-550 mb-1">Authorized Accounts:</p>
+                <p>Superadmin: <strong>admin@tradeflowos.com</strong> / <strong>admin_tf_2026</strong></p>
+                <p>Fleet Mgr: <strong>fleet.manager@tradeflowos.com</strong> / <strong>fleet_tf_2026</strong></p>
+                <p>Customs Agt: <strong>customs.agent@tradeflowos.com</strong> / <strong>customs_tf_2026</strong></p>
+                <p>Ops Mgr: <strong>manager@tradeflowos.com</strong> / <strong>manager_tf_2026</strong></p>
+                <p>Compliance: <strong>compliance@tradeflowos.com</strong> / <strong>compliance_tf_2026</strong></p>
               </div>
             )}
           </div>

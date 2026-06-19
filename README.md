@@ -69,15 +69,19 @@ npm run build
 
 ## 🔐 Credentials & Access Roles
 
-To log in and experience the platform's multi-tenant design, use the following credentials on the login screen:
+To log in and experience the platform's multi-tenant design, use the following credentials on the login screens:
 
 ### Operations Control Center (Admin)
-*   **Superadmin**: `superadmin@tradeflowos.com` / `super123`
-*   **Fleet Manager**: `fleet@tradeflowos.com` / `fleet123`
-*   **Customs Clearing Agent**: `customs@tradeflowos.com` / `customs123`
+*   **Superadmin**: `admin@tradeflowos.com` / `admin_tf_2026`
+*   **Fleet Manager**: `fleet.manager@tradeflowos.com` / `fleet_tf_2026`
+*   **Customs Clearing Agent**: `customs.agent@tradeflowos.com` / `customs_tf_2026`
+*   **Operations Manager**: `manager@tradeflowos.com` / `manager_tf_2026`
+*   **Compliance Officer**: `compliance@tradeflowos.com` / `compliance_tf_2026`
 
 ### Client Portal
-*   **Commercial Customer**: `client@example.com` / `user123`
+*   **Global Retail Ltd**: `client.global@example.com` / `client_tf_2026`
+*   **Mining Corp Ltd**: `client.mining@example.com` / `mining_tf_2026`
+*   **AgriTech Solutions**: `client.agritech@example.com` / `agri_tf_2026`
 
 ---
 

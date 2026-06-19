@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { LayoutDashboard, Package, FileText, FileSignature, LogOut, Settings } from "lucide-react";
 import { AuthGate } from "@/components/AuthGate";
@@ -9,6 +10,23 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [clientName, setClientName] = useState("Global Retail Ltd");
+  const [clientId, setClientId] = useState("CUST-8829");
+
+  useEffect(() => {
+    const name = localStorage.getItem("tradeflow_client_name");
+    const id = localStorage.getItem("tradeflow_client_id");
+    if (name) setClientName(name);
+    if (id) setClientId(id);
+  }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem('tradeflow_auth_client');
+    localStorage.removeItem('tradeflow_client_name');
+    localStorage.removeItem('tradeflow_client_id');
+    window.location.reload();
+  };
+
   return (
     <AuthGate allowedRole="client">
       <div className="flex min-h-[calc(100vh-5rem)] bg-dfs-light">
@@ -16,8 +34,8 @@ export default function DashboardLayout({
         <aside className="w-64 bg-dfs-navy text-white flex flex-col hidden md:flex shrink-0 border-r border-dfs-navy/20">
           <div className="p-6 border-b border-white/10">
             <div className="text-xs font-bold text-dfs-gold uppercase tracking-widest mb-1">Client Portal</div>
-            <div className="font-bold text-lg">Global Retail Ltd</div>
-            <div className="text-xs text-slate-400">ID: CUST-8829</div>
+            <div className="font-bold text-lg">{clientName}</div>
+            <div className="text-xs text-slate-400">ID: {clientId}</div>
           </div>
           
           <nav className="flex-1 p-4 space-y-2">
@@ -40,7 +58,7 @@ export default function DashboardLayout({
               <Settings className="w-4 h-4" /> Settings
             </Link>
             <button 
-              onClick={() => { localStorage.removeItem('tradeflow_auth_client'); window.location.reload(); }} 
+              onClick={handleSignOut} 
               className="w-full flex items-center gap-3 px-4 py-2 rounded-sm font-medium text-slate-400 hover:bg-white/5 hover:text-red-400 transition-colors text-sm"
             >
               <LogOut className="w-4 h-4" /> Sign Out

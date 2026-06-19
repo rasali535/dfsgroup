@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLogistics } from "@/components/LogisticsProvider";
 import { STATUS_ORDER, ShipmentStatus, Shipment } from "@/lib/mockData";
-import { LayoutDashboard, Users, Truck, AlertTriangle, PlusCircle, CheckCircle2, Search, X, ShieldCheck, UserCog, RefreshCw, BarChart2, FileText } from "lucide-react";
+import { LayoutDashboard, Users, Truck, AlertTriangle, PlusCircle, CheckCircle2, Search, X, ShieldCheck, UserCog, RefreshCw, BarChart2, FileText, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-type Role = 'superadmin' | 'fleet_manager' | 'customs_agent';
+type Role = 'superadmin' | 'fleet_manager' | 'customs_agent' | 'operations_manager' | 'compliance_officer';
 type Tab = 'operations' | 'fleet' | 'customs' | 'customers';
 
 export default function AdminDashboard() {
@@ -17,6 +17,25 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Load authorized role on mount if set via login gate
+  useEffect(() => {
+    const savedRole = localStorage.getItem('tradeflow_admin_role') as Role | null;
+    if (savedRole && ['superadmin', 'fleet_manager', 'customs_agent', 'operations_manager', 'compliance_officer'].includes(savedRole)) {
+      setRole(savedRole);
+      // set the default tab according to the saved role
+      if (savedRole === 'fleet_manager') setActiveTab('fleet');
+      else if (savedRole === 'customs_agent') setActiveTab('customs');
+      else if (savedRole === 'compliance_officer') setActiveTab('customs');
+      else setActiveTab('operations');
+    }
+  }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem('tradeflow_auth_admin');
+    localStorage.removeItem('tradeflow_admin_role');
+    window.location.reload();
+  };
   
   // New Shipment Form State
   const [newCustomer, setNewCustomer] = useState("");
@@ -78,12 +97,16 @@ export default function AdminDashboard() {
     if (newRole === 'fleet_manager') setActiveTab('fleet');
     if (newRole === 'customs_agent') setActiveTab('customs');
     if (newRole === 'superadmin') setActiveTab('operations');
+    if (newRole === 'operations_manager') setActiveTab('operations');
+    if (newRole === 'compliance_officer') setActiveTab('customs');
   };
 
   const allowedTabs = {
     superadmin: ['operations', 'fleet', 'customs', 'customers'],
     fleet_manager: ['fleet'],
-    customs_agent: ['customs']
+    customs_agent: ['customs'],
+    operations_manager: ['operations', 'customers'],
+    compliance_officer: ['customs', 'operations']
   };
 
   const filteredShipments = shipments.filter(s => 
@@ -127,6 +150,8 @@ export default function AdminDashboard() {
             <option className="bg-[#0B1F3A]" value="superadmin">Superadmin Console</option>
             <option className="bg-[#0B1F3A]" value="fleet_manager">Fleet Manager</option>
             <option className="bg-[#0B1F3A]" value="customs_agent">Customs Inspector</option>
+            <option className="bg-[#0B1F3A]" value="operations_manager">Operations Manager</option>
+            <option className="bg-[#0B1F3A]" value="compliance_officer">Compliance Officer</option>
           </select>
         </div>
         
@@ -179,6 +204,16 @@ export default function AdminDashboard() {
               <Users className="w-4.5 h-4.5" /> Customer Accounts
             </button>
           )}
+        </div>
+
+        {/* Staff Sign Out */}
+        <div className="mt-6 pt-4 border-t border-white/10 md:mt-auto">
+          <button 
+            onClick={handleSignOut}
+            className="w-full flex items-center gap-3 px-4 py-2 text-xs uppercase tracking-wider font-bold text-slate-400 hover:text-red-400 transition-colors"
+          >
+            <LogOut className="w-4.5 h-4.5" /> Staff Sign Out
+          </button>
         </div>
       </div>
 

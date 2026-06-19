@@ -9,6 +9,8 @@ import Link from "next/link";
 export default function DashboardOverview() {
   const { shipments, kpis } = useLogistics();
   const [initLoading, setInitLoading] = useState(true);
+  const [clientName, setClientName] = useState("Global Retail Ltd");
+  const [clientId, setClientId] = useState("CUST-8829");
 
   // Replicate database query latency on mount
   useEffect(() => {
@@ -16,6 +18,13 @@ export default function DashboardOverview() {
       setInitLoading(false);
     }, 1200);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const name = localStorage.getItem("tradeflow_client_name");
+    const id = localStorage.getItem("tradeflow_client_id");
+    if (name) setClientName(name);
+    if (id) setClientId(id);
   }, []);
 
   return (
@@ -27,7 +36,7 @@ export default function DashboardOverview() {
           <div>
             <h1 className="text-3xl font-black text-[#0B1F3A]">Operations Control Center</h1>
             <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">
-              Global Retail Ltd • ID: CUST-8829
+              {clientName} • ID: {clientId}
             </p>
           </div>
           <div className="text-right text-xs font-mono text-slate-400 font-semibold bg-white border border-gray-250 px-3 py-1.5 shadow-sm">
