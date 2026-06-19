@@ -40,7 +40,7 @@ export default function StandaloneDocumentsPage() {
     }))
   );
 
-  const simulateUpload = (fileName: string) => {
+  const simulateUpload = async (fileName: string) => {
     if (!selectedWaybill) {
       alert("Please select a target Waybill to link this document before uploading.");
       return;
@@ -50,45 +50,77 @@ export default function StandaloneDocumentsPage() {
     setUploadingFileName(fileName);
     setUploadProgress(0);
 
-    const interval = setInterval(() => {
-      setUploadProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            // Determine type from file name keywords or random
-            const lowerName = fileName.toLowerCase();
-            let category: typeof CATEGORIES[number] = "Commercial Invoice";
-            if (lowerName.includes("packing") || lowerName.includes("list")) category = "Packing List";
-            else if (lowerName.includes("lading") || lowerName.includes("bill")) category = "Bill of Lading";
-            else if (lowerName.includes("permit")) category = "Import Permit";
-            else if (lowerName.includes("origin") || lowerName.includes("cert")) category = "Certificate of Origin";
+    let progressVal = 0;
+    const progressInterval = setInterval(() => {
+      progressVal += 15;
+      if (progressVal >= 90) {
+        clearInterval(progressInterval);
+        setUploadProgress(90);
+      } else {
+        setUploadProgress(progressVal);
+      }
+    }, 100);
 
-            // Generate status
-            const status: 'Approved' | 'Under Review' | 'Flagged' = 
-              lowerName.includes("mismatch") || lowerName.includes("flag") ? "Flagged" : "Approved";
-            
-            const statusText = 
-              status === "Approved" ? "OCR scan passed. Core values match consignment specifications." :
-              "Flagged: Weight mismatch detected between declared cargo and permit capacity.";
+    try {
+      const lowerName = fileName.toLowerCase();
+      let category: typeof CATEGORIES[number] = "Commercial Invoice";
+      if (lowerName.includes("packing") || lowerName.includes("list")) category = "Packing List";
+      else if (lowerName.includes("lading") || lowerName.includes("bill")) category = "Bill of Lading";
+      else if (lowerName.includes("permit")) category = "Import Permit";
+      else if (lowerName.includes("origin") || lowerName.includes("cert")) category = "Certificate of Origin";
 
-            const newDoc: ShipmentDocument = {
-              name: fileName,
-              type: category,
-              status,
-              uploadDate: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }),
-              statusText
-            } as any; // Allow custom statusText attribute
-
-            addDocumentToShipment(selectedWaybill, newDoc);
-            setUploading(false);
-            setUploadingFileName("");
-            showToast(`File linked to ${selectedWaybill} successfully`);
-          }, 800);
-          return 100;
-        }
-        return prev + 10;
+      const res = await fetch("/api/analyze-doc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileName,
+          category,
+          waybill: selectedWaybill
+        })
       });
-    }, 120);
+
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
+      const auditResult = await res.json();
+      
+      setTimeout(() => {
+        const newDoc: ShipmentDocument = {
+          name: fileName,
+          type: category,
+          status: auditResult.status || "Approved",
+          uploadDate: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }),
+          statusText: auditResult.statusText || "OCR verification completed. Final clearance remains subject to customs authority approval."
+        } as any;
+
+        addDocumentToShipment(selectedWaybill, newDoc);
+        setUploading(false);
+        setUploadingFileName("");
+        showToast(`File linked to ${selectedWaybill} successfully`);
+      }, 500);
+
+    } catch (err) {
+      console.error(err);
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
+      setTimeout(() => {
+        const newDoc: ShipmentDocument = {
+          name: fileName,
+          type: "Commercial Invoice",
+          status: "Under Review",
+          uploadDate: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }),
+          statusText: "Awaiting manual customs agent validation. Final clearance remains subject to customs authority approval."
+        } as any;
+
+        addDocumentToShipment(selectedWaybill, newDoc);
+        setUploading(false);
+        setUploadingFileName("");
+        showToast(`Document uploaded under review status`);
+      }, 500);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

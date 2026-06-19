@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Upload, ShieldCheck, AlertCircle, Bot, CornerDownLeft, Sparkles, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLogistics } from "@/components/LogisticsProvider";
 
 interface Message {
   role: "ai" | "user";
@@ -41,8 +42,7 @@ const RESPONSE_MAP: Record<string, string> = {
     "Customs clearance times vary significantly depending on the border post, transport corridor, and pre-filing status:\n\n" +
     "• **Pre-Cleared Shipments**: 2 to 4 hours. By submitting documents digitally through DFS-OS before arrival, customs clearance is often pre-approved.\n" +
     "• **Standard Cross-Border (e.g., Kopfontein / Ramatlabama)**: 4 to 12 hours under normal conditions.\n" +
-    "• **High-Traffic Corridors (e.g., Chirundu / Beitbridge)**: 12 to 36 hours. Physical inspections, weight bridge queues, or cargo scanners can extend this time.\n\n" +
-    "To ensure the fastest turnaround, we recommend utilizing SADC SADC-preferential clearance and submitting digital OCR-verified documents 48 hours in advance.\n\n" +
+    "• **High-Traffic Corridors (e.g., Beitbridge / Chirundu)**: 12 to 36 hours. Physical inspections or scan queues can delay clearing.\n\n" +
     "Final clearance remains subject to customs authority approval.",
 
   "what documents are needed for transit cargo?": 
@@ -56,6 +56,7 @@ const RESPONSE_MAP: Record<string, string> = {
 };
 
 export default function AssistantPage() {
+  const { shipments } = useLogistics();
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: "ai", 
@@ -74,35 +75,41 @@ export default function AssistantPage() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = (text: string) => {
+  const handleSend = async (text: string) => {
     if (!text.trim() || loading) return;
 
-    setMessages(prev => [...prev, { role: "user", content: text }]);
+    const userMessage = { role: "user" as const, content: text };
+    const updatedMessages = [...messages, userMessage];
+    setMessages(prev => [...prev, userMessage]);
     setLoading(true);
 
-    const query = text.toLowerCase().trim().replace(/[?.]/g, "");
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: updatedMessages,
+          contextShipments: shipments
+        })
+      });
 
-    // Mock API delay
-    setTimeout(() => {
-      let matchedResponse = "";
-      
-      // Attempt exact or partial match
-      const matchingKey = Object.keys(RESPONSE_MAP).find(key => 
-        query.includes(key.replace(/[?.]/g, "")) || key.replace(/[?.]/g, "").includes(query)
-      );
-
-      if (matchingKey) {
-        matchedResponse = RESPONSE_MAP[matchingKey];
-      } else {
-        matchedResponse = 
-          `I've noted your query regarding "${text}". Our regional customs agents operate 24/7 across Southern Africa and can review your specific cargo details to advise on tariff codes, customs duties, and required permits. \n\n` +
-          `To proceed, please upload your Commercial Invoice or Packing List to the [Document Center](/documents) for automated compliance scanning.\n\n` +
-          `Final clearance remains subject to customs authority approval.`;
+      if (!response.ok) {
+        throw new Error("Failed to contact advisory server");
       }
 
-      setMessages(prev => [...prev, { role: "ai", content: matchedResponse }]);
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: "ai", content: data.reply }]);
+    } catch (err: any) {
+      console.error(err);
+      setMessages(prev => [...prev, { 
+        role: "ai", 
+        content: "Error: Unable to connect to the DFS advisory network. Please check your connection.\n\nFinal clearance remains subject to customs authority approval." 
+      }]);
+    } finally {
       setLoading(false);
-    }, 1800);
+    }
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {

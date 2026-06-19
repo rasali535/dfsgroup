@@ -3,13 +3,16 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, Bot } from "lucide-react";
+import { useLogistics } from "@/components/LogisticsProvider";
 
 export function GlobalChatbot() {
+  const { shipments } = useLogistics();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'ai', content: 'Hi there! I am the DFS Customs Assistant. Need help with tariffs, cross-border compliance, or tracking?' }
   ]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -22,29 +25,43 @@ export function GlobalChatbot() {
     }
   }, [messages, isOpen]);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
 
     const userMsg = input.trim();
-    setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
+    const updatedMessages = [...messages, { role: 'user' as const, content: userMsg }];
+    setMessages(updatedMessages);
     setInput("");
+    setLoading(true);
 
-    // Simulate AI thinking and response
-    setTimeout(() => {
-      let aiResponse = "I can definitely help with that. Could you provide a bit more detail? (Note: Final clearance is always subject to customs authority approval.)";
-      
-      const lowerInput = userMsg.toLowerCase();
-      if (lowerInput.includes('document') || lowerInput.includes('import')) {
-        aiResponse = "To import goods into Southern Africa, you generally need:\n\n• Commercial Invoice\n• Packing List\n• Bill of Lading\n• Import Permit\n\nEnsure all descriptions match perfectly.";
-      } else if (lowerInput.includes('track') || lowerInput.includes('shipment') || lowerInput.includes('where')) {
-        aiResponse = "You can track your active shipments in our Tracking Portal. Would you like me to redirect you to the tracking page?";
-      } else if (lowerInput.includes('quote') || lowerInput.includes('cost') || lowerInput.includes('price')) {
-        aiResponse = "You can request a competitive regional pricing quote via our Quote Request system. Our team usually responds within 24 hours.";
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: updatedMessages,
+          contextShipments: shipments
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to contact advisory network");
       }
 
-      setMessages(prev => [...prev, { role: 'ai', content: aiResponse }]);
-    }, 1000);
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: "ai", content: data.reply }]);
+    } catch (err) {
+      console.error(err);
+      setMessages(prev => [...prev, { 
+        role: "ai", 
+        content: "Error: Unable to connect to the DFS advisory network. Please check your connection.\n\nFinal clearance remains subject to customs authority approval." 
+      }]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -106,6 +123,18 @@ export function GlobalChatbot() {
                   </div>
                 </div>
               ))}
+              {loading && (
+                <div className="flex gap-3">
+                  <div className="w-6 h-6 rounded-full bg-dfs-navy text-white flex items-center justify-center shrink-0">
+                    <Bot className="w-4 h-4" />
+                  </div>
+                  <div className="bg-white border border-gray-100 p-3 shadow-sm rounded-lg flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-75"></span>
+                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-150"></span>
+                  </div>
+                </div>
+              )}
               <div ref={messagesEndRef} />
             </div>
 

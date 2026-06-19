@@ -23,47 +23,82 @@ export default function DashboardDocuments() {
     }))
   );
 
-  const simulateUpload = (fileName: string) => {
+  const simulateUpload = async (fileName: string) => {
     if (!selectedWaybill) return;
 
     setUploading(true);
     setUploadingFileName(fileName);
     setUploadProgress(0);
     
-    const interval = setInterval(() => {
-      setUploadProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            const lowerName = fileName.toLowerCase();
-            let category = "Commercial Invoice";
-            if (lowerName.includes("packing")) category = "Packing List";
-            else if (lowerName.includes("lading")) category = "Bill of Lading";
-            else if (lowerName.includes("permit")) category = "Import Permit";
-            else if (lowerName.includes("origin")) category = "Certificate of Origin";
+    let progressVal = 0;
+    const progressInterval = setInterval(() => {
+      progressVal += 15;
+      if (progressVal >= 90) {
+        clearInterval(progressInterval);
+        setUploadProgress(90);
+      } else {
+        setUploadProgress(progressVal);
+      }
+    }, 100);
 
-            const status = lowerName.includes("flag") || lowerName.includes("mismatch") ? "Flagged" : "Approved";
-            const statusText = 
-              status === "Approved" ? "OCR scan passed. All values match." :
-              "Flagged: Weight mismatch detected by AI audit.";
+    try {
+      const lowerName = fileName.toLowerCase();
+      let category = "Commercial Invoice";
+      if (lowerName.includes("packing")) category = "Packing List";
+      else if (lowerName.includes("lading")) category = "Bill of Lading";
+      else if (lowerName.includes("permit")) category = "Import Permit";
+      else if (lowerName.includes("origin")) category = "Certificate of Origin";
 
-            const newDoc: ShipmentDocument = {
-              name: fileName,
-              type: category,
-              status,
-              uploadDate: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }),
-              statusText
-            } as any;
-
-            addDocumentToShipment(selectedWaybill, newDoc);
-            setUploading(false);
-            setUploadingFileName("");
-          }, 600);
-          return 100;
-        }
-        return prev + 10;
+      const res = await fetch("/api/analyze-doc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileName,
+          category,
+          waybill: selectedWaybill
+        })
       });
-    }, 150);
+
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
+      const auditResult = await res.json();
+      
+      setTimeout(() => {
+        const newDoc: ShipmentDocument = {
+          name: fileName,
+          type: category,
+          status: auditResult.status || "Approved",
+          uploadDate: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }),
+          statusText: auditResult.statusText || "OCR verification completed. Final clearance remains subject to customs authority approval."
+        } as any;
+
+        addDocumentToShipment(selectedWaybill, newDoc);
+        setUploading(false);
+        setUploadingFileName("");
+      }, 500);
+
+    } catch (err) {
+      console.error(err);
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
+      setTimeout(() => {
+        const newDoc: ShipmentDocument = {
+          name: fileName,
+          type: "Commercial Invoice",
+          status: "Under Review",
+          uploadDate: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }),
+          statusText: "Awaiting manual customs agent validation. Final clearance remains subject to customs authority approval."
+        } as any;
+
+        addDocumentToShipment(selectedWaybill, newDoc);
+        setUploading(false);
+        setUploadingFileName("");
+      }, 500);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
