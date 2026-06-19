@@ -102,7 +102,7 @@ export default function AssistantPage() {
 
       setMessages(prev => [...prev, { role: "ai", content: matchedResponse }]);
       setLoading(false);
-    }, 900);
+    }, 1800);
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {

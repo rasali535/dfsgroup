@@ -30,10 +30,10 @@ export function Navbar() {
           
           <div className="w-px h-6 bg-gray-200 mx-1"></div>
           
-          <Link href="/dashboard" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Portal</Link>
-          <Link href="/admin" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Admin</Link>
-          <Link href="/documents" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Docs</Link>
-          <Link href="/assistant" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">AI Co-pilot</Link>
+          <Link href="/dashboard" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Client Portal</Link>
+          <Link href="/admin" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Operations Admin</Link>
+          <Link href="/documents" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Document Audit</Link>
+          <Link href="/assistant" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Customs Co-pilot</Link>
         </div>
 
         <div className="flex items-center gap-4">

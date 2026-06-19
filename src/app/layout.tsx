@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { GlobalChatbot } from "@/components/GlobalChatbot";
+import { LogisticsProvider } from "@/components/LogisticsProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,12 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-dfs-light text-dfs-dark antialiased min-h-screen flex flex-col`}>
-        <Navbar />
-        <main className="flex-1 flex flex-col bg-white">
-          {children}
-        </main>
-        <Footer />
-        <GlobalChatbot />
+        <LogisticsProvider>
+          <Navbar />
+          <main className="flex-1 flex flex-col bg-white">
+            {children}
+          </main>
+          <Footer />
+          <GlobalChatbot />
+        </LogisticsProvider>
       </body>
     </html>
   );

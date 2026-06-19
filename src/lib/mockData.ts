@@ -5,6 +5,7 @@ export interface ShipmentDocument {
   type: string;
   status: 'Approved' | 'Under Review' | 'Flagged';
   uploadDate: string;
+  statusText?: string;
 }
 
 export interface ShipmentNote {

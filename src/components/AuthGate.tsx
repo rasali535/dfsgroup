@@ -119,10 +119,10 @@ export function AuthGate({ children, allowedRole }: AuthGateProps) {
               />
             </div>
             {allowedRole === 'client' ? (
-              <p className="text-xs text-slate-400 text-right">Demo: <strong>client@example.com / user123</strong></p>
+              <p className="text-xs text-slate-400 text-right">Credentials: <strong>client@example.com / user123</strong></p>
             ) : (
-              <div className="text-xs text-slate-400 mt-2 space-y-1">
-                <p>Demo Accounts:</p>
+              <div className="text-xs text-slate-400 mt-2 space-y-1 font-medium">
+                <p>Authorized Accounts:</p>
                 <p>superadmin@dfsgroup.com / super123</p>
                 <p>fleet@dfsgroup.com / fleet123</p>
                 <p>customs@dfsgroup.com / customs123</p>

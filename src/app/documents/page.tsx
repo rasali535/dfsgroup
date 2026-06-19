@@ -2,18 +2,10 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, FileText, CheckCircle2, AlertTriangle, Clock, Trash2, ShieldCheck, Filter, FileCheck, Check, Search } from "lucide-react";
+import { useLogistics } from "@/components/LogisticsProvider";
+import { Upload, FileText, CheckCircle2, AlertTriangle, Clock, Trash2, ShieldCheck, FileCheck, Check, Search, AlertCircle } from "lucide-react";
 import Link from "next/link";
-
-interface MockFile {
-  id: string;
-  name: string;
-  category: "Commercial Invoice" | "Packing List" | "Bill of Lading" | "Import Permit" | "Certificate of Origin";
-  size: string;
-  uploadDate: string;
-  status: "Approved" | "Under Review" | "Flagged";
-  statusText?: string;
-}
+import { ShipmentDocument } from "@/lib/mockData";
 
 const CATEGORIES = [
   "Commercial Invoice",
@@ -24,63 +16,36 @@ const CATEGORIES = [
 ] as const;
 
 export default function StandaloneDocumentsPage() {
+  const { shipments, addDocumentToShipment } = useLogistics();
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedWaybill, setSelectedWaybill] = useState(shipments[0]?.waybill || "");
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadingFileName, setUploadingFileName] = useState("");
   const [dragOver, setDragOver] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [files, setFiles] = useState<MockFile[]>([
-    {
-      id: "DOC-001",
-      name: "Commercial_Invoice_INV29001.pdf",
-      category: "Commercial Invoice",
-      size: "1.2 MB",
-      uploadDate: "Jun 19, 2026 14:22",
-      status: "Approved",
-      statusText: "OCR Verification passed. Customs values match."
-    },
-    {
-      id: "DOC-002",
-      name: "Packing_List_PK9902_V2.pdf",
-      category: "Packing List",
-      size: "820 KB",
-      uploadDate: "Jun 19, 2026 14:24",
-      status: "Approved",
-      statusText: "Net weights match declared Commercial Invoice."
-    },
-    {
-      id: "DOC-003",
-      name: "Import_Permit_BURS_Reg4.pdf",
-      category: "Import Permit",
-      size: "2.4 MB",
-      uploadDate: "Jun 18, 2026 10:15",
-      status: "Flagged",
-      statusText: "Flagged: Consignee VAT Number mismatch vs Commercial Invoice."
-    },
-    {
-      id: "DOC-004",
-      name: "Bill_of_Lading_MSC_88291.pdf",
-      category: "Bill of Lading",
-      size: "3.1 MB",
-      uploadDate: "Jun 17, 2026 16:45",
-      status: "Approved",
-      statusText: "Pre-clearance manifest sent to border post."
-    },
-    {
-      id: "DOC-005",
-      name: "Cert_Origin_SADC_PTA.pdf",
-      category: "Certificate of Origin",
-      size: "950 KB",
-      uploadDate: "Jun 16, 2026 11:30",
-      status: "Under Review",
-      statusText: "Awaiting manual customs agent validation."
-    }
-  ]);
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(""), 3000);
+  };
+
+  // Compile a list of all documents currently linked in our shipments list for unified display
+  const allDocuments = shipments.flatMap(s => 
+    (s.documents || []).map(d => ({
+      ...d,
+      waybill: s.waybill
+    }))
+  );
 
   const simulateUpload = (fileName: string) => {
+    if (!selectedWaybill) {
+      alert("Please select a target Waybill to link this document before uploading.");
+      return;
+    }
+    
     setUploading(true);
     setUploadingFileName(fileName);
     setUploadProgress(0);
@@ -90,33 +55,40 @@ export default function StandaloneDocumentsPage() {
         if (prev >= 100) {
           clearInterval(interval);
           setTimeout(() => {
-            // Pick a random category or default to Commercial Invoice
-            const randomCategory = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
-            const randomStatus = Math.random() > 0.35 ? "Approved" : Math.random() > 0.5 ? "Under Review" : "Flagged";
-            const randomStatusText = 
-              randomStatus === "Approved" ? "OCR scan passed. Clean matching." :
-              randomStatus === "Flagged" ? "Flagged: Verification failed. HS Code matches missing declaration." :
-              "Awaiting customs clerk review.";
+            // Determine type from file name keywords or random
+            const lowerName = fileName.toLowerCase();
+            let category: typeof CATEGORIES[number] = "Commercial Invoice";
+            if (lowerName.includes("packing") || lowerName.includes("list")) category = "Packing List";
+            else if (lowerName.includes("lading") || lowerName.includes("bill")) category = "Bill of Lading";
+            else if (lowerName.includes("permit")) category = "Import Permit";
+            else if (lowerName.includes("origin") || lowerName.includes("cert")) category = "Certificate of Origin";
 
-            const newFile: MockFile = {
-              id: `DOC-00${files.length + 6}`,
+            // Generate status
+            const status: 'Approved' | 'Under Review' | 'Flagged' = 
+              lowerName.includes("mismatch") || lowerName.includes("flag") ? "Flagged" : "Approved";
+            
+            const statusText = 
+              status === "Approved" ? "OCR scan passed. Core values match consignment specifications." :
+              "Flagged: Weight mismatch detected between declared cargo and permit capacity.";
+
+            const newDoc: ShipmentDocument = {
               name: fileName,
-              category: randomCategory,
-              size: `${(Math.random() * 3 + 0.5).toFixed(1)} MB`,
-              uploadDate: new Date().toLocaleString("en-US", { hour12: false }).replace(",", ""),
-              status: randomStatus as any,
-              statusText: randomStatusText
-            };
+              type: category,
+              status,
+              uploadDate: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }),
+              statusText
+            } as any; // Allow custom statusText attribute
 
-            setFiles(prevFiles => [newFile, ...prevFiles]);
+            addDocumentToShipment(selectedWaybill, newDoc);
             setUploading(false);
             setUploadingFileName("");
-          }, 600);
+            showToast(`File linked to ${selectedWaybill} successfully`);
+          }, 800);
           return 100;
         }
         return prev + 10;
       });
-    }, 150);
+    }, 120);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,19 +114,28 @@ export default function StandaloneDocumentsPage() {
     }
   };
 
-  const handleDelete = (id: string) => {
-    setFiles(prev => prev.filter(f => f.id !== id));
-  };
-
-  const filteredFiles = files.filter(file => {
-    const matchesCategory = activeCategory === "All" || file.category === activeCategory;
-    const matchesSearch = file.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          file.category.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredDocs = allDocuments.filter(doc => {
+    const matchesCategory = activeCategory === "All" || doc.type === activeCategory;
+    const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          doc.waybill.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          doc.type.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F7FA]">
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div 
+            initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#0B1F3A] text-white px-6 py-3.5 shadow-2xl flex items-center gap-2 font-bold text-xs uppercase tracking-wider border-t-2 border-[#D4A017]"
+          >
+            <CheckCircle2 className="w-4 h-4 text-[#D4A017]" /> {toastMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <section className="bg-[#0B1F3A] text-white pt-28 pb-12 relative overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
@@ -162,19 +143,19 @@ export default function StandaloneDocumentsPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-[#D4A017] text-xs font-bold uppercase tracking-wider mb-3">
-                <FileCheck className="w-3.5 h-3.5" /> Operations Engine
+                <FileCheck className="w-3.5 h-3.5" /> DFS Operations Control Center
               </div>
-              <h1 className="text-3xl font-black tracking-tight md:text-4xl">Document Management</h1>
+              <h1 className="text-3xl font-black tracking-tight md:text-4xl">Document Advisory Center</h1>
               <p className="text-slate-300 text-sm mt-2 max-w-2xl font-light">
-                Securely upload and manage cross-border clearances, bills of lading, and import permits. Run automated OCR pre-audits instantly.
+                Submit and audit bills of lading, SADC certificates, and customs permits. Document updates trigger instant optical character recognition verification checks.
               </p>
             </div>
             <div className="flex gap-4">
               <Link href="/dashboard" className="bg-white/10 border border-white/20 px-5 py-2.5 text-xs font-bold hover:bg-white/20 transition-all uppercase tracking-wider text-center flex items-center">
-                Client Portal
+                Portal Overview
               </Link>
               <Link href="/assistant" className="bg-[#D4A017] text-white px-5 py-2.5 text-xs font-bold hover:bg-yellow-500 transition-all uppercase tracking-wider text-center flex items-center shadow-lg shadow-[#D4A017]/10">
-                AI Assistant
+                Customs Advisory
               </Link>
             </div>
           </div>
@@ -189,15 +170,31 @@ export default function StandaloneDocumentsPage() {
             {/* Upload Area Column */}
             <div className="lg:col-span-1 space-y-6">
               <div className="bg-white border border-gray-200 p-6 shadow-sm">
-                <h2 className="text-lg font-bold text-[#0B1F3A] mb-4">Upload Document</h2>
+                <h2 className="text-lg font-bold text-[#0B1F3A] mb-4">Link New Paperwork</h2>
                 
+                {/* Waybill Selector */}
+                <div className="mb-4 space-y-2">
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Target Waybill Reference</label>
+                  <select 
+                    value={selectedWaybill}
+                    onChange={(e) => setSelectedWaybill(e.target.value)}
+                    className="w-full bg-slate-50 border border-gray-250 p-3 text-xs font-bold text-[#0B1F3A] outline-none focus:bg-white focus:border-[#0B1F3A]"
+                  >
+                    {shipments.map(s => (
+                      <option key={s.waybill} value={s.waybill}>
+                        {s.waybill} ({s.customer.split(" ")[0]})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 {/* Drag zone */}
                 <div
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed p-8 text-center rounded-sm transition-all cursor-pointer relative overflow-hidden flex flex-col items-center justify-center min-h-[220px] ${
+                  className={`border-2 border-dashed p-8 text-center rounded-sm transition-all cursor-pointer relative overflow-hidden flex flex-col items-center justify-center min-h-[200px] ${
                     dragOver 
                       ? "border-[#D4A017] bg-yellow-50/50 scale-102" 
                       : "border-gray-300 bg-slate-50 hover:bg-slate-100/70 hover:border-[#0B1F3A]"
@@ -212,7 +209,7 @@ export default function StandaloneDocumentsPage() {
                   />
                   <Upload className={`w-10 h-10 mb-4 transition-transform duration-300 ${dragOver ? "text-[#D4A017] -translate-y-1 scale-110" : "text-[#D4A017]"}`} />
                   <div className="font-bold text-[#0B1F3A] mb-1 text-sm">Drag & Drop or Click to Upload</div>
-                  <div className="text-[10px] text-slate-500 font-medium">Supports PDF, JPG, PNG or TIFF (Max 15MB)</div>
+                  <div className="text-[10px] text-slate-500 font-medium">PDF, JPG, PNG or TIFF (Max 15MB)</div>
                   
                   {dragOver && (
                     <motion.div 
@@ -233,7 +230,7 @@ export default function StandaloneDocumentsPage() {
                       exit={{ opacity: 0, height: 0 }}
                       className="mt-6 border-t border-gray-150 pt-4"
                     >
-                      <div className="flex items-center justify-between text-xs font-bold text-slate-600 mb-2">
+                      <div className="flex items-center justify-between text-xs font-bold text-slate-650 mb-2">
                         <span className="truncate max-w-[70%]">Uploading: {uploadingFileName}</span>
                         <span>{uploadProgress}%</span>
                       </div>
@@ -245,7 +242,7 @@ export default function StandaloneDocumentsPage() {
                       </div>
                       <div className="text-[10px] text-slate-400 mt-2 flex items-center gap-1 font-medium">
                         <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span>
-                        Scanning via DFS OCR Compliance checks...
+                        Initiating OCR compliance matching...
                       </div>
                     </motion.div>
                   )}
@@ -255,20 +252,16 @@ export default function StandaloneDocumentsPage() {
               {/* Compliance Guidelines */}
               <div className="bg-white border border-gray-200 p-6 shadow-sm">
                 <h3 className="font-bold text-xs uppercase tracking-wider text-[#0B1F3A] mb-4 flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#D4A017]" /> Customs Compliance Standards
+                  <ShieldCheck className="w-4 h-4 text-[#D4A017]" /> Regional Customs Guidelines
                 </h3>
-                <div className="space-y-3 text-xs text-slate-600">
+                <div className="space-y-3 text-xs text-slate-600 leading-relaxed font-medium">
                   <div className="flex gap-2">
                     <Check className="w-4 h-4 text-green-600 shrink-0" />
-                    <span>Always ensure invoice currency (ZAR, USD, EUR) is explicitly stated for tariff calculation.</span>
+                    <span>Commercial invoice valuations must align with the declared customs codes of the SADC zone.</span>
                   </div>
                   <div className="flex gap-2">
                     <Check className="w-4 h-4 text-green-600 shrink-0" />
-                    <span>Packing list weights must match the Bill of Lading net weights within a 1% threshold.</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <Check className="w-4 h-4 text-green-600 shrink-0" />
-                    <span>Certificate of Origin must list the SADC exporter registration number for tariff exemptions.</span>
+                    <span>Packing list item counts must correlate with SADC cargo manifests.</span>
                   </div>
                 </div>
               </div>
@@ -302,7 +295,7 @@ export default function StandaloneDocumentsPage() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search documents..."
+                    placeholder="Search waybill or file..."
                     className="pl-9 pr-4 py-2 w-full border border-gray-200 text-xs font-medium focus:border-[#0B1F3A] focus:ring-1 focus:ring-[#0B1F3A] outline-none bg-slate-50"
                   />
                 </div>
@@ -311,10 +304,10 @@ export default function StandaloneDocumentsPage() {
               {/* Document List */}
               <div className="space-y-4">
                 <AnimatePresence mode="popLayout">
-                  {filteredFiles.length > 0 ? (
-                    filteredFiles.map((file) => (
+                  {filteredDocs.length > 0 ? (
+                    filteredDocs.map((doc, idx) => (
                       <motion.div
-                        key={file.id}
+                        key={idx}
                         layout
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -329,13 +322,13 @@ export default function StandaloneDocumentsPage() {
                               <FileText className="w-6 h-6 text-[#0B1F3A]" />
                             </div>
                             <div className="min-w-0">
-                              <div className="font-bold text-[#0B1F3A] text-sm truncate max-w-[280px] sm:max-w-[400px]">{file.name}</div>
+                              <div className="font-bold text-[#0B1F3A] text-sm truncate max-w-[280px] sm:max-w-[400px] font-mono">{doc.name}</div>
                               <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-1 font-semibold uppercase tracking-wider">
-                                <span>{file.category}</span>
+                                <span className="font-mono text-[#D4A017]">{doc.waybill}</span>
                                 <span>•</span>
-                                <span>{file.size}</span>
+                                <span>{doc.type}</span>
                                 <span>•</span>
-                                <span>{file.uploadDate}</span>
+                                <span>{doc.uploadDate}</span>
                               </div>
                             </div>
                           </div>
@@ -345,45 +338,45 @@ export default function StandaloneDocumentsPage() {
                             
                             {/* Badges */}
                             <div className="text-right">
-                              {file.status === "Approved" && (
+                              {doc.status === "Approved" && (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-50 border border-green-200 text-green-700 text-[10px] font-bold uppercase tracking-wider rounded-full">
                                   <CheckCircle2 className="w-3.5 h-3.5" /> Approved
                                 </span>
                               )}
-                              {file.status === "Flagged" && (
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 border border-red-200 text-red-700 text-[10px] font-bold uppercase tracking-wider rounded-full">
+                              {doc.status === "Flagged" && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 border border-red-200 text-red-700 text-[10px] font-bold uppercase tracking-wider rounded-full animate-pulse">
                                   <AlertTriangle className="w-3.5 h-3.5" /> Flagged
                                 </span>
                               )}
-                              {file.status === "Under Review" && (
+                              {doc.status === "Under Review" && (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-bold uppercase tracking-wider rounded-full">
-                                  <Clock className="w-3.5 h-3.5 animate-pulse" /> Reviewing
+                                  <Clock className="w-3.5 h-3.5" /> Audit Review
                                 </span>
                               )}
                             </div>
 
-                            {/* Actions */}
-                            <button
-                              onClick={() => handleDelete(file.id)}
-                              className="text-slate-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 rounded-sm"
-                              title="Delete file"
+                            <Link 
+                              href={`/dashboard/shipments/${doc.waybill}`} 
+                              className="text-xs font-bold text-[#0B1F3A] hover:text-[#D4A017] uppercase tracking-wider"
                             >
-                              <Trash2 className="w-4.5 h-4.5" />
-                            </button>
+                              Audit Record
+                            </Link>
 
                           </div>
 
                         </div>
 
                         {/* Status Description Callout */}
-                        {file.statusText && (
+                        {((doc as any).statusText || doc.status === "Flagged") && (
                           <div className={`mt-4 p-3 text-xs flex gap-2 border-t font-medium ${
-                            file.status === "Approved" ? "bg-green-50/30 border-green-100 text-green-800" :
-                            file.status === "Flagged" ? "bg-red-50/50 border-red-150 text-red-800" :
+                            doc.status === "Approved" ? "bg-green-50/30 border-green-100 text-green-800" :
+                            doc.status === "Flagged" ? "bg-red-50/50 border-red-150 text-red-800" :
                             "bg-amber-50/30 border-amber-100 text-amber-800"
                           }`}>
-                            <span className="font-bold uppercase tracking-wide">AI Audit:</span>
-                            <span className="flex-1">{file.statusText}</span>
+                            <span className="font-bold uppercase tracking-wide">AI Audit Logs:</span>
+                            <span className="flex-1">
+                              {(doc as any).statusText || "Discrepancy detected in declared permit weights."}
+                            </span>
                           </div>
                         )}
 
@@ -397,7 +390,7 @@ export default function StandaloneDocumentsPage() {
                       <FileText className="w-16 h-16 text-slate-300 mx-auto mb-4" />
                       <h3 className="text-xl font-bold text-[#0B1F3A] mb-1">No Documents Found</h3>
                       <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                        We couldn't find any documents matching your category or search criteria. Drag and drop files on the left to add them.
+                        No paperwork records match the search terms in this category tab.
                       </p>
                     </motion.div>
                   )}
