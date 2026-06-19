@@ -20,18 +20,20 @@ export function Navbar() {
           </Link>
         </div>
         
-        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+        <div className="hidden lg:flex items-center gap-4 xl:gap-6">
           <Link href="/" className="text-sm font-semibold text-dfs-navy hover:text-dfs-gold transition-colors">Home</Link>
-          <Link href="/about" className="text-sm font-semibold text-dfs-navy hover:text-dfs-gold transition-colors">About</Link>
+          <Link href="/about" className="text-sm font-semibold text-dfs-navy hover:text-dfs-gold transition-colors">About Us</Link>
           <Link href="/services" className="text-sm font-semibold text-dfs-navy hover:text-dfs-gold transition-colors">Services</Link>
+          <Link href="/industries" className="text-sm font-semibold text-dfs-navy hover:text-dfs-gold transition-colors">Industries</Link>
+          <Link href="/contact" className="text-sm font-semibold text-dfs-navy hover:text-dfs-gold transition-colors">Contact</Link>
+          <Link href="/tracking" className="text-sm font-semibold text-dfs-navy hover:text-dfs-gold transition-colors">Tracking</Link>
           
-          <div className="w-px h-6 bg-gray-200 mx-2"></div>
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Demo Apps:</span>
+          <div className="w-px h-6 bg-gray-200 mx-1"></div>
           
-          <Link href="/tracking" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Tracking</Link>
-          <Link href="/dashboard" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Client Portal</Link>
+          <Link href="/dashboard" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Portal</Link>
           <Link href="/admin" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Admin</Link>
-          <Link href="/portal/ai" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">AI Chat</Link>
+          <Link href="/documents" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">Docs</Link>
+          <Link href="/assistant" className="text-sm font-bold text-dfs-gold hover:text-yellow-500 transition-colors">AI Co-pilot</Link>
         </div>
 
         <div className="flex items-center gap-4">

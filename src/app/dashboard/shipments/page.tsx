@@ -48,7 +48,11 @@ export default function DashboardShipments() {
               <tbody className="divide-y divide-gray-100">
                 {mockShipments.map((s, i) => (
                   <tr key={i} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-dfs-navy">{s.waybill}</td>
+                    <td className="px-6 py-4 font-bold text-dfs-navy">
+                      <Link href={`/dashboard/shipments/${s.waybill}`} className="hover:text-dfs-gold hover:underline">
+                        {s.waybill}
+                      </Link>
+                    </td>
                     <td className="px-6 py-4">
                       <div className="font-semibold text-dfs-navy">{s.cargo}</div>
                       <div className="text-xs text-slate-400">{s.weight}</div>
@@ -64,9 +68,14 @@ export default function DashboardShipments() {
                     </td>
                     <td className="px-6 py-4 font-medium">{s.eta}</td>
                     <td className="px-6 py-4 text-right">
-                      <Link href="/tracking" className="inline-flex items-center gap-1 text-dfs-navy hover:text-dfs-gold font-bold bg-slate-100 px-3 py-1.5 rounded-sm text-xs">
-                        Track <Package className="w-3.5 h-3.5" />
-                      </Link>
+                      <div className="flex items-center justify-end gap-2">
+                        <Link href={`/dashboard/shipments/${s.waybill}`} className="inline-flex items-center text-dfs-navy hover:text-[#D4A017] font-bold bg-slate-100 px-3 py-1.5 rounded-sm text-xs">
+                          Details
+                        </Link>
+                        <Link href="/tracking" className="inline-flex items-center gap-1 text-[#D4A017] hover:text-dfs-navy font-bold bg-yellow-50 border border-yellow-200 px-3 py-1.5 rounded-sm text-xs">
+                          Track <Package className="w-3.5 h-3.5" />
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))}

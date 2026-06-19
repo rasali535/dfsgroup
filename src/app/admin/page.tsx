@@ -53,7 +53,9 @@ export default function AdminDashboard() {
       weight: newWeight || "0 kg",
       status: "Booked",
       eta: "Pending Routing",
-      timeline: [{ status: "Booked", date: new Date().toLocaleString(), location: newOrigin }]
+      timeline: [{ status: "Booked", date: new Date().toLocaleString(), location: newOrigin }],
+      documents: [],
+      notes: [{ date: new Date().toLocaleString(), author: "System", content: "Shipment record created in Admin Panel." }]
     };
 
     setShipments([newShipment, ...shipments]);

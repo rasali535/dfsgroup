@@ -59,7 +59,11 @@ export default function DashboardOverview() {
               <tbody className="divide-y divide-gray-100">
                 {mockShipments.slice(0, 3).map((s, i) => (
                   <tr key={i} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-dfs-navy">{s.waybill}</td>
+                    <td className="px-6 py-4 font-bold text-dfs-navy">
+                      <Link href={`/dashboard/shipments/${s.waybill}`} className="hover:text-dfs-gold hover:underline">
+                        {s.waybill}
+                      </Link>
+                    </td>
                     <td className="px-6 py-4">{s.origin} <span className="text-slate-400 px-2">→</span> {s.destination}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${s.status === 'Delivered' ? 'bg-green-100 text-green-800' : s.status === 'In Transit' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}`}>
